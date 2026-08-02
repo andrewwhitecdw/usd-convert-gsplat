@@ -24,3 +24,8 @@ class TestReadmeInstallPath(unittest.TestCase):
             'python -m pip install "./source/python[usd]"',
             after_cd,
             "Install command uses invalid path after cd source/python",
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()
