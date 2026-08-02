@@ -7,6 +7,8 @@ import tomllib
 import unittest
 from pathlib import Path
 
+from packaging.markers import Marker
+
 
 class TestPyprojectUsdExtras(unittest.TestCase):
     def test_linux_aarch64_uses_usd_exchange(self):
@@ -30,18 +32,18 @@ class TestPyprojectUsdExtras(unittest.TestCase):
         # usd-core must still be selected on a non-Linux aarch64 platform.
         env = {"platform_machine": "aarch64", "platform_system": "Darwin"}
         self.assertTrue(
-            eval(core_marker, {"__builtins__": {}}, env),
+            Marker(core_marker).evaluate(env),
             f"usd-core marker excludes non-Linux aarch64: {core_marker}",
         )
 
         # On Linux aarch64, usd-exchange must be selected and usd-core excluded.
         linux_aarch64_env = {"platform_machine": "aarch64", "platform_system": "Linux"}
         self.assertTrue(
-            eval(exchange_marker, {"__builtins__": {}}, linux_aarch64_env),
+            Marker(exchange_marker).evaluate(linux_aarch64_env),
             f"usd-exchange marker does not select Linux aarch64: {exchange_marker}",
         )
         self.assertFalse(
-            eval(core_marker, {"__builtins__": {}}, linux_aarch64_env),
+            Marker(core_marker).evaluate(linux_aarch64_env),
             f"usd-core marker does not exclude Linux aarch64: {core_marker}",
         )
 
